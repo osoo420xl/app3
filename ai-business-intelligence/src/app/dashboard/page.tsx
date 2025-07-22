@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useMounted } from '@/hooks/use-mounted'
+import { Loading } from '@/components/ui/loading'
 import { IdeaGenerator } from '@/components/dashboard/idea-generator'
 import { CompetitorAnalyzer } from '@/components/dashboard/competitor-analyzer'
 import { Button } from '@/components/ui/button'
@@ -11,6 +13,15 @@ import { Lightbulb, Search, TrendingUp, Target, Users, Zap, BarChart3, Settings 
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('generate')
+  const mounted = useMounted()
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 flex items-center justify-center">
+        <Loading message="Loading Dashboard..." size="lg" />
+      </div>
+    )
+  }
 
   const tabs = [
     { id: 'generate', label: 'Generate Ideas', icon: Lightbulb, color: 'from-blue-600 to-purple-600' },

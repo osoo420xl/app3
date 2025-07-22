@@ -4,12 +4,17 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Zap, Users, ArrowRight, Sparkles } from 'lucide-react'
+import { useMounted } from '@/hooks/use-mounted'
+import { Loading } from '@/components/ui/loading'
 
 export function HeroSection() {
   const [ideasDiscovered, setIdeasDiscovered] = useState(1247)
   const [usersCount, setUsersCount] = useState(3429)
+  const mounted = useMounted()
 
   useEffect(() => {
+    if (!mounted) return
+    
     // Simulate real-time counters
     const ideasInterval = setInterval(() => {
       setIdeasDiscovered(prev => prev + Math.floor(Math.random() * 3))
@@ -23,7 +28,16 @@ export function HeroSection() {
       clearInterval(ideasInterval)
       clearInterval(usersInterval)
     }
-  }, [])
+  }, [mounted])
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <Loading message="Initializing AI Business Intelligence..." size="lg" />
+      </section>
+    )
+  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
